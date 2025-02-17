@@ -1,3 +1,11 @@
+---
+title: "Polaris 导航软件"
+author: "dywsy21"
+date: \today
+using_title: true
+using_table_of_content: true
+---
+
 # Polaris 导航软件
 
 本项目为一个主体上基于PyQt5/PyQt-Fluent-Widgets的导航软件，使用OpenStreetMap(osm)上的真实地球道路信息，以Polaris北极星作为名字和图标代表导航功能。图标来源于阿里矢量图标库。

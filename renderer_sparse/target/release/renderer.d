@@ -1,1 +1,0 @@
-E:\BaiduSyncdisk\Code\ Projects\PyQt\ Projects\Data\ Structure\ Project\renderer_sparse\target\release\renderer.exe: E:\BaiduSyncdisk\Code\ Projects\PyQt\ Projects\Data\ Structure\ Project\renderer_sparse\src\main.rs

@@ -19,6 +19,7 @@ from map_utils import *
 from ..common.config import *
 import concurrent.futures
 import json  # Add this import
+from qframelesswindow.webengine import FramelessWebEngineView
 
 class MapInterface(QWidget):
     def __init__(self, parent=None):
@@ -60,7 +61,8 @@ class MapInterface(QWidget):
         self.setLayout(self.mainLayout)  # Ensure the layout is set to the widget
 
         # Map View (75% height)
-        self.browser = QWebEngineView()
+        # self.browser = QWebEngineView()
+        self.browser = FramelessWebEngineView(self)
         self.browser.loadFinished.connect(self.on_load_finished)
 
         # Expose Python object to JavaScript

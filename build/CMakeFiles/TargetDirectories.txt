@@ -1,3 +1,0 @@
-E:/BaiduSyncdisk/Code Projects/PyQt Projects/Data Structure Project/build/CMakeFiles/backend.dir
-E:/BaiduSyncdisk/Code Projects/PyQt Projects/Data Structure Project/build/CMakeFiles/edit_cache.dir
-E:/BaiduSyncdisk/Code Projects/PyQt Projects/Data Structure Project/build/CMakeFiles/rebuild_cache.dir

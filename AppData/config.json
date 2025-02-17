@@ -8,10 +8,10 @@
         "MicaEnabled": false
     },
     "Speed": {
-        "DrivingSpeed": 120,
-        "PedestrianSpeed": 1,
-        "PubTransportSpeed": 118,
-        "RidingSpeed": 5
+        "DrivingSpeed": 20,
+        "PedestrianSpeed": 10,
+        "PubTransportSpeed": 30,
+        "RidingSpeed": 20
     },
     "QFluentWidgets": {
         "ThemeColor": "#ff009faa",
