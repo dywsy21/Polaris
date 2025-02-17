@@ -13,23 +13,17 @@
 #include "k-dtree.h"
 #include <string.h>
 #include "defs.h"
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
-#include <boost/serialization/unordered_map.hpp>
-#include <boost/serialization/string.hpp>
-#include <boost/serialization/utility.hpp>
-#include <boost/serialization/vector.hpp>
 #define M_PI 3.14159265358979323846
 
 extern std::vector<uint64_t> index_to_node_id;
 
-static const std::unordered_set<std::string> pedes_white_list = {"pedestrian", "footway", "steps", "path", "living_street", "primary", "secondary", "tertiary", "residential", "track", "service", "road", "bridleway", "steps", "corridor", "sidewalk", "crossing", "traffic_island", "both", "left", "right", "trunk", "motorway", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", "share_busway", "shared_lane", "no", "unclassified", "motorway_junction"};
+static const std::unordered_set<std::string> pedes_white_list = {"pedestrian", "footway", "steps", "path", "living_street", "primary", "secondary", "tertiary", "residential", "track", "service", "road", "bridleway", "steps", "corridor", "sidewalk", "crossing", "traffic_island", "both", "left", "right", "trunk", "motorway", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", "share_busway", "shared_lane", "no", "unclassified"};
 
-static const std::unordered_set<std::string> riding_white_list = {"cycleway", "path", "track", "residential", "living_street", "motorway_link", "trunk", "primary", "secondary", "tertiary", "motorway", "service", "road", "bridleway", "lane", "share_busway", "shared_lane", "opposite_lane", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", "crossing", "no", "unclassified", "footway", "motorway_junction"};
+static const std::unordered_set<std::string> riding_white_list = {"cycleway", "path", "track", "residential", "living_street", "motorway_link", "trunk", "primary", "secondary", "tertiary", "motorway", "service", "road", "bridleway", "lane", "share_busway", "shared_lane", "opposite_lane", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", "crossing", "no", "unclassified", "footway"};
 
-static const std::unordered_set<std::string> driving_white_list = {"motorway", "trunk", "primary", "secondary", "tertiary", "residential", "service", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", "road", "path", "both", "left", "right", "escape", "unclassified", "shared_lane", "shared_busway", "no", "living_street", "raceway", "motorway_junction"};
+static const std::unordered_set<std::string> driving_white_list = {"motorway", "trunk", "primary", "secondary", "tertiary", "residential", "service", "motorway_link", "trunk_link", "primary_link", "secondary_link", "tertiary_link", "road", "path", "both", "left", "right", "escape", "unclassified", "shared_lane", "shared_busway", "no", "living_street", "raceway"};
 
-static const std::unordered_set<std::string> pub_transport_white_list = {"bus_stop", "railway", "tram_stop", "subway_entrance", "busway", "bus_guideway"};
+static const std::unordered_set<std::string> pub_transport_white_list = {"bus_stop", "motorway_junction", "traffic_signals", "crossing", "railway", "tram_stop", "subway_entrance", "busway", "bus_guideway", "share_busway"};
 
 // Function to calculate the Haversine distance between two points
 double haversine_distance(double lat1, double lon1, double lat2, double lon2) {
@@ -88,56 +82,6 @@ void process_public_transport_relation(const Relation& relation,
     }
 }
 
-// Function to serialize the graph to a binary file
-bool serialize_graph(const std::string& dumpFile,
-    const std::unordered_map<uint64_t, uint32_t>& node_id_to_index,
-    const std::unordered_map<uint64_t, std::string>& node_tags,
-    const std::unordered_map<uint64_t, std::pair<double, double>>& node_id_to_coords,
-    const KdTree& kd_tree)
-{
-    std::ofstream ofs(dumpFile, std::ios::binary);
-    if(!ofs.good()) return false;
-    boost::archive::binary_oarchive oa(ofs);
-
-    int version = 1;  // Add a version number
-    oa << version;    // Serialize version first
-
-    // First serialize the containers
-    oa << node_id_to_index;
-    oa << node_tags;
-    oa << node_id_to_coords;
-    oa << index_to_node_id;  // Add this line
-    oa << kd_tree; // Serialize the KdTree
-
-    return true;
-}
-
-// Function to deserialize the graph from a binary file
-bool deserialize_graph(const std::string& dumpFile,
-    std::unordered_map<uint64_t, uint32_t>& node_id_to_index,
-    std::unordered_map<uint64_t, std::string>& node_tags,
-    std::unordered_map<uint64_t, std::pair<double, double>>& node_id_to_coords,
-    KdTree& kd_tree)
-{
-    std::ifstream ifs(dumpFile, std::ios::binary);
-    if(!ifs.good()) return false;
-
-        boost::archive::binary_iarchive ia(ifs);
-        int version = 0;
-        ia >> version;
-        if (version != 1) {
-            std::cerr << "Incompatible version or corrupt file." << std::endl;
-            return false;
-        }
-        ia >> node_id_to_index;
-        ia >> node_tags;
-        ia >> node_id_to_coords;
-        ia >> index_to_node_id;
-        ia >> kd_tree;
-
-    return true;
-}
-
 // Function to load the graph from an XML file
 bool load_graph(const std::string& filepath,
                 std::unordered_map<uint64_t, uint32_t>& node_id_to_index,
@@ -145,13 +89,6 @@ bool load_graph(const std::string& filepath,
                 std::unordered_map<uint64_t, std::pair<double, double>>& node_id_to_coords,
                 bool pedestrian, bool riding, bool driving, bool pubTransport,
                 KdTree& kd_tree) {
-    // Check dump file before loading from OSM
-    std::string dumpFile = filepath + ".dump";
-    if(deserialize_graph(dumpFile, node_id_to_index, node_tags, node_id_to_coords, kd_tree)) {
-        std::cout << "Loaded graph from dump: " << dumpFile << std::endl;
-        return true;
-    }
-
     pugi::xml_document doc;
     pugi::xml_parse_result result = doc.load_file(filepath.c_str());
     if (!result) {
@@ -323,9 +260,6 @@ bool load_graph(const std::string& filepath,
     std::cout << std::endl; // Move to the next line after progress is complete
 
     // Further processing if needed, such as filtering based on node_tags and whitelist flags
-
-    // After loading from OSM, write dump
-    serialize_graph(dumpFile, node_id_to_index, node_tags, node_id_to_coords, kd_tree);
 
     return true;
 }
