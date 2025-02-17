@@ -76,16 +76,4 @@ void process_public_transport_relation(const Relation& relation,
                                      const std::unordered_map<uint64_t, uint32_t>& node_id_to_index,
                                      std::unordered_map<uint64_t, std::string>& node_tags);
 
-bool serialize_graph(const std::string& dumpFile,
-    const std::unordered_map<uint64_t, uint32_t>& node_id_to_index,
-    const std::unordered_map<uint64_t, std::string>& node_tags,
-    const std::unordered_map<uint64_t, std::pair<double, double>>& node_id_to_coords,
-    const KdTree& kd_tree);
-
-bool deserialize_graph(const std::string& dumpFile,
-    std::unordered_map<uint64_t, uint32_t>& node_id_to_index,
-    std::unordered_map<uint64_t, std::string>& node_tags,
-    std::unordered_map<uint64_t, std::pair<double, double>>& node_id_to_coords,
-    KdTree& kd_tree);
-
 #endif // PATH_FINDING_H

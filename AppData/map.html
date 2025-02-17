@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <script src="../dist/leaflet.ShowHideLayerGroup.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_generated {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+        <div id="map" style="width: 100%; height: 100%;"></div>
+        <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    
+    
+            <div class="folium-map" id="map_generated" ></div>
+        
+</body>
+<script>
+    
+    
+            // Create and export the map globally
+            window.map = L.map(
+                "map_generated",
+                {
+                    center: [31.2304, 121.4737],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 12,
+                    zoomControl: true,
+                    preferCanvas: true
+                }
+            );
+            L.control.scale().addTo(window.map);
+
+            // Initialize layer groups
+            window.baseLayerGroup = L.layerGroup().addTo(window.map);
+            window.customLayerGroup = L.layerGroup().addTo(window.map);
+            window.customLayerGroup_sparse = L.layerGroup().addTo(window.map);
+
+            // Add base tile layer to base layer group
+            L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+                    "attribution": "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
+                    "detectRetina": false,
+                    "maxNativeZoom": 19,
+                    "maxZoom": 19,
+                    "minZoom": 0,
+                    "noWrap": false,
+                    "opacity": 1,
+                    "subdomains": "abc",
+                    "tms": false
+                }
+            ).addTo(window.baseLayerGroup);
+
+            var custom_tile_layer = L.tileLayer(
+                "E:/BaiduSyncdisk/Code Projects/PyQt Projects/Data Structure Project/renderer/cache/{z}/{x}_{y}.png",
+                {
+                    "detectRetina": false,
+                    "maxNativeZoom": 19,
+                    "maxZoom": 19,
+                    "minZoom": 0,
+                    "noWrap": false,
+                    "opacity": 0,  // Initially hidden
+                    "subdomains": "abc",
+                    "tms": false
+                }
+            );
+            window.customLayerGroup.addLayer(custom_tile_layer);
+
+            var custom_tile_layer2 = L.tileLayer(
+                "E:/BaiduSyncdisk/Code Projects/PyQt Projects/Data Structure Project/renderer_sparse/cache/{z}/{x}_{y}.png",
+                {
+                    "detectRetina": false,
+                    "maxNativeZoom": 19,
+                    "maxZoom": 19,
+                    "minZoom": 0,
+                    "noWrap": false,
+                    "opacity": 0,  // Initially hidden
+                    "subdomains": "abc",
+                    "tms": false
+                }
+            );
+            window.customLayerGroup_sparse.addLayer(custom_tile_layer2);
+            
+            // Initialize window.drawnPaths and markers
+            window.drawnPaths = [];
+            window.markers = [];
+            window.yellow_markers = [];
+
+            // Define variables to store interval IDs
+            var refreshIntervalCustomLayer = null;
+            var refreshIntervalCustomSparseLayer = null;
+
+            function refreshCustomLayerGroup() {
+                window.customLayerGroup.eachLayer(function (layer) {
+                    Object.values(layer._tiles).forEach(function(tile) {
+                        var img = tile.el;
+                        var src = img.src;
+                        img.src = ''; // Clear the src to force reload
+                        img.src = src; // Set the src back to reload the tile
+                    });
+                });
+            }
+
+            function refreshCustomSparseLayerGroup() {
+                window.customLayerGroup_sparse.eachLayer(function (layer) {
+                    Object.values(layer._tiles).forEach(function(tile) {
+                        var img = tile.el;
+                        var src = img.src;
+                        img.src = ''; // Clear the src to force reload
+                        img.src = src; // Set the src back to reload the tile
+                    });
+                });
+            }
+
+            // Remove or comment out the initial setInterval calls
+            // setInterval(refreshCustomLayerGroup, 1000); // Remove or comment out this line
+            // setInterval(refreshCustomSparseLayerGroup, 1000); // Remove or comment out this line
+
+            // Define functions to start and stop refreshing
+            function startRefreshing() {
+                if (!refreshIntervalCustomLayer) {
+                    refreshIntervalCustomLayer = setInterval(refreshCustomLayerGroup, 1000); // Refresh every second
+                }
+                if (!refreshIntervalCustomSparseLayer) {
+                    refreshIntervalCustomSparseLayer = setInterval(refreshCustomSparseLayerGroup, 1000); // Refresh every second
+                }
+            }
+
+            function stopRefreshing() {
+                if (refreshIntervalCustomLayer) {
+                    clearInterval(refreshIntervalCustomLayer);
+                    refreshIntervalCustomLayer = null;
+                }
+                if (refreshIntervalCustomSparseLayer) {
+                    clearInterval(refreshIntervalCustomSparseLayer);
+                    refreshIntervalCustomSparseLayer = null;
+                }
+            }
+
+            // Ensure that these functions are only called when the checkbox state changes
+
+    function toggleLayerVisibility(layerType) {
+        if (layerType === 'default') {
+            window.baseLayerGroup.eachLayer(function (layer) {
+                layer.setOpacity(1);
+            });
+            window.customLayerGroup.eachLayer(function (layer) {
+                layer.setOpacity(0);
+            });
+            window.customLayerGroup_sparse.eachLayer(function (layer) {
+                layer.setOpacity(0);
+            });
+        } else if (layerType === 'custom') {
+            window.baseLayerGroup.eachLayer(function (layer) {
+                layer.setOpacity(0);
+            });
+            window.customLayerGroup.eachLayer(function (layer) {
+                layer.setOpacity(1);
+            });
+            window.customLayerGroup_sparse.eachLayer(function (layer) {
+                layer.setOpacity(0);
+            });
+        } else if (layerType === 'custom_sparse') {
+            window.baseLayerGroup.eachLayer(function (layer) {
+                layer.setOpacity(0);
+            });
+            window.customLayerGroup.eachLayer(function (layer) {
+                layer.setOpacity(0);
+            });
+            window.customLayerGroup_sparse.eachLayer(function (layer) {
+                layer.setOpacity(1);
+            });
+        }
+    }
+</script>
+</html>

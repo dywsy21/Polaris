@@ -3,7 +3,7 @@
         "CheckUpdateAtStartUp": true
     },
     "MainWindow": {
-        "DpiScale": 2,
+        "DpiScale": 1.5,
         "Language": "Auto",
         "MicaEnabled": false
     },

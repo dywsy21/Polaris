@@ -2,8 +2,6 @@
 #include "defs.h"
 #include <algorithm>
 #include <cmath>
-#include <boost/serialization/vector.hpp>
-#include <boost/serialization/split_member.hpp>
 
 KdTree::KdTree(int k) : k(k), root(nullptr), tree_size(0) {}
 
@@ -44,6 +42,22 @@ std::vector<std::vector<double>> KdTree::findKthNearestNeighbor(const std::vecto
     }
 
     std::priority_queue<std::pair<double, const Node*>> max_heap;
+
+    // Check cache for k-1 nearest neighbors
+    if (k > 1) {
+        CacheKey prev_cache_key{point, k - 1};
+        auto prev_it = cache.find(prev_cache_key);
+        if (prev_it != cache.end()) {
+            const auto& prev_result = prev_it->second;
+            for (const auto& neighbor : prev_result) {
+                double dist = 0;
+                for (int i = 0; i < this->k; ++i) {
+                    dist += (neighbor[i] - point[i]) * (neighbor[i] - point[i]);
+                }
+                max_heap.emplace(dist, nullptr); // Use nullptr as we don't need the node reference here
+            }
+        }
+    }
 
     std::vector<std::vector<double>> result;
     findKthNearestNeighborRec(root.get(), point, 0, k, max_heap);
@@ -213,85 +227,3 @@ const KdTree::Node* KdTree::findNearestNeighborRec(const Node* node, const std::
 
     return best;
 }
-
-template<class Archive>
-void KdTree::save(Archive & ar, const unsigned int /*version*/) const {
-    ar & k;
-    ar & tree_size;
-    ar & points;
-    bool hasRoot = (root != nullptr);
-    ar & hasRoot;
-    if (hasRoot) {
-        saveNode(ar, root.get());
-    }
-}
-
-// template<class Archive>
-// void KdTree::load(Archive & ar, const unsigned int /*version*/) {
-//     ar & k;
-//     ar & tree_size;
-//     ar & points;
-//     bool hasRoot;
-//     ar & hasRoot;
-//     if (hasRoot) {
-//         root = loadNode(ar);
-//     }
-//     cache.clear();
-//     rebuildIndexMap();  // Build index_to_node now in one pass
-// }
-
-template<class Archive>
-void KdTree::saveNode(Archive& ar, const Node* node) const {
-    ar & (*node);
-    bool hasLeft = (node->left != nullptr);
-    ar & hasLeft;
-    if (hasLeft) {
-        saveNode(ar, node->left.get());
-    }
-    bool hasRight = (node->right != nullptr);
-    ar & hasRight;
-    if (hasRight) {
-        saveNode(ar, node->right.get());
-    }
-}
-
-template<class Archive>
-std::unique_ptr<KdTree::Node> KdTree::loadNode(Archive& ar) {
-    auto newNode = std::make_unique<Node>(std::vector<double>(), 0);
-    ar & (*newNode);
-    // Remove per-node index_to_node insert:
-    // index_to_node[newNode->index] = newNode.get();
-
-    bool hasLeft;
-    ar & hasLeft;
-    if (hasLeft) {
-        newNode->left = loadNode(ar);
-    }
-    bool hasRight;
-    ar & hasRight;
-    if (hasRight) {
-        newNode->right = loadNode(ar);
-    }
-    return newNode;
-}
-
-void KdTree::rebuildIndexMap() {
-    index_to_node.clear();
-    // Simple DFS to fill index_to_node:
-    std::function<void(const Node*)> dfs = [&](const Node* n) {
-        if(!n) return;
-        index_to_node[n->index] = const_cast<Node*>(n);
-        dfs(n->left.get());
-        dfs(n->right.get());
-    };
-    dfs(root.get());
-}
-
-// Explicit template instantiation for common archive types
-#include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/binary_iarchive.hpp>
-
-template void KdTree::save(boost::archive::binary_oarchive&, const unsigned int) const;
-template void KdTree::load(boost::archive::binary_iarchive&, const unsigned int);
-template void KdTree::saveNode(boost::archive::binary_oarchive&, const Node*) const;
-template std::unique_ptr<KdTree::Node> KdTree::loadNode(boost::archive::binary_iarchive&);
