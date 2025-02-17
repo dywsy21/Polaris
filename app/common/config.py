@@ -8,8 +8,12 @@ from qfluentwidgets import (qconfig, QConfig, ConfigItem, OptionsConfigItem, Boo
 
 from .setting import CONFIG_FILE
 import os
-map_relative_path = os.path.join("backend", "data", "map.osm")
-db_path = os.path.join("backend", "data", "map.db")
+# map_relative_path = os.path.join("backend", "data", "map.osm")
+# db_path = os.path.join("backend", "data", "map.db")
+# map_html_path = os.path.join("AppData", "map.html")
+
+map_relative_path = os.path.join("map_data", "map.osm")
+db_path = os.path.join("map_data", "map.db")
 map_html_path = os.path.join("AppData", "map.html")
 
 pedSpeed = 1

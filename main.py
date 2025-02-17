@@ -18,13 +18,6 @@ if not os.path.exists(db_path):
     preprocess_osm_data(map_relative_path, db_path)
     print("Preprocessing OSM data completed.")
 
-# # prepare map
-# if not os.path.exists(map_html_path):
-#     print("Preparing map...")
-#     from preprocess_map_html import prepare_map
-#     prepare_map()
-#     print("Map preparation completed.")
-
 # enable dpi scale
 if cfg.get(cfg.dpiScale) != "Auto":
     os.environ["QT_ENABLE_HIGHDPI_SCALING"] = "0"
@@ -33,7 +26,6 @@ else:
     QApplication.setHighDpiScaleFactorRoundingPolicy(
         Qt.HighDpiScaleFactorRoundingPolicy.PassThrough)
     QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
-
 
 class Application(QApplication):
     def __init__(self, argv):
@@ -115,7 +107,7 @@ galleryTranslator.load(locale, "app", ".", ":/app/i18n")
 app.installTranslator(translator)
 app.installTranslator(galleryTranslator)
 
-# create main window
+# create main window``
 w = MainWindow()
 w.show()
 

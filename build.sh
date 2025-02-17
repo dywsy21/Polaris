@@ -20,4 +20,7 @@ cd renderer_sparse
 cargo build --release
 cp ./target/release/renderer_sparse $root_dir/bin
 
-# Download map data
+# Download map data and generate db file
+cd $root_dir/map_data
+curl -o map.osm "https://overpass-api.de/api/map?bbox=120.21,30.10,122.32,31.93"
+cd .. && python preprocess_osm.py

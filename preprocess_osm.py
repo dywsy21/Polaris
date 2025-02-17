@@ -1,6 +1,8 @@
 import xml.etree.ElementTree as ET
 import math
 import sqlite3
+from app.common.config import *
+from renderer import preprocess_osm
 
 # Function to calculate tile coordinates from latitude and longitude
 def lat_lon_to_tile(lat, lon, zoom):
@@ -111,14 +113,14 @@ def preprocess_osm_data(osm_file_path, db_path):
     cursor.execute('CREATE UNIQUE INDEX IF NOT EXISTS idx_nodes_id ON nodes(id)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_way_nods_node_id ON way_nodes(node_id)')
     cursor.execute('CREATE INDEX IF NOT EXISTS idx_way_nods_way_id ON way_nodes(way_id)')
-
-
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_way_tags_way_id ON way_tags(way_id)')
+    cursor.execute('CREATE INDEX IF NOT EXISTS idx_way_id_id ON way_id(id)')
 
     conn.commit()
     conn.close()
 
 def test_preprocess_osm_data():
-    db_path = r'E:\BaiduSyncdisk\Code Projects\PyQt Projects\Data Structure Project\backend\data\map.db'
+    # db_path = r'E:\BaiduSyncdisk\Code Projects\PyQt Projects\Data Structure Project\backend\data\map.db'
     
     # Connect to the database and verify the data
     conn = sqlite3.connect(db_path)
@@ -151,7 +153,8 @@ def test_preprocess_osm_data():
 
 # Run the tests
 if __name__ == "__main__":
-    test_preprocess_osm_data()
+    preprocess_osm_data(map_relative_path, db_path)
+    # test_preprocess_osm_data()
 
 # Function to query nodes within visible tiles from the database
 def query_nodes_from_db(db_path, zoom, visible_tiles):
