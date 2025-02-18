@@ -324,7 +324,7 @@ fn convex_hull(mut points: Vec<(i32, i32)>) -> Vec<(i32, i32)> {
 }
 
 fn render_map(zoom: i32, xtile: i32, ytile: i32) {
-    let cache_dir = format!("E:/BaiduSyncdisk/Code Projects/PyQt Projects/Data Structure Project/renderer/cache/{}/", zoom);
+    let cache_dir = format!("./cache_renderer/{}/", zoom);
     std::fs::create_dir_all(&cache_dir).unwrap();
     let cache_file_path = format!("{}{}_{}.png", cache_dir, xtile, ytile);
 
@@ -340,7 +340,7 @@ fn render_map(zoom: i32, xtile: i32, ytile: i32) {
     let scene_width = 800;
     let scene_height = 600;
 
-    let db_path = "E:/BaiduSyncdisk/Code Projects/PyQt Projects/Data Structure Project/backend/data/map.db";
+    let db_path = "../map_data/map.db";
     let ways = query_ways_from_db(db_path, zoom, (xtile, ytile));
 
     let start2 = std::time::Instant::now();

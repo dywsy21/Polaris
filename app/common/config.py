@@ -14,7 +14,10 @@ import os
 
 map_relative_path = os.path.join("map_data", "map.osm")
 db_path = os.path.join("map_data", "map.db")
-map_html_path = os.path.join("AppData", "map.html")
+map_html_path = os.path.join("map_data", "map.html")
+backend_path = "bin/backend.exe"
+renderer_path_cfg = "bin/renderer.exe"
+renderer_sparse_path_cfg = "bin/renderer_sparse.exe"
 
 pedSpeed = 1
 rideSpeed = 15

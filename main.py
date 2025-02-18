@@ -33,7 +33,6 @@ class Application(QApplication):
         self.backend_process = QProcess()
         # Specify the absolute path to backend.exe or ensure it's in the current working directory
         # backend_path = "backend/build/backend.exe"  # use this to enable serde
-        backend_path = "build/backend"
         self.backend_process.setProgram(backend_path)
         
         # # Optionally, set the working directory

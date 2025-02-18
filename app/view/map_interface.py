@@ -358,7 +358,7 @@ class MapInterface(QWidget):
 
             // Define custom icons
             var yellowIcon = L.icon({
-                iconUrl: 'file:///E:/BaiduSyncdisk/Code%20Projects/PyQt%20Projects/Data%20Structure%20Project/app/resource/images/yellow_icon.svg',
+                iconUrl: './assets/yellow_icon.svg',
                 iconSize: [25, 41],
                 iconAnchor: [12, 41],
                 popupAnchor: [1, -34],
@@ -567,7 +567,7 @@ class MapInterface(QWidget):
 
             // Define custom icons
             var yellowIcon = L.icon({{
-                iconUrl: 'file:///E:/BaiduSyncdisk/Code%20Projects/PyQt%20Projects/Data%20Structure%20Project/app/resource/images/yellow_icon.svg',
+                iconUrl: './assets/yellow_icon.svg',
                 iconSize: [25, 41],
                 iconAnchor: [12, 41],
                 popupAnchor: [1, -34],
@@ -688,9 +688,9 @@ class MapInterface(QWidget):
     
     def begin_rendering_tile(self, z, x, y):
         if self.currentLayerType == "custom" and z <= 13:
-            renderer_path = "renderer/target/release/renderer.exe"
+            renderer_path = renderer_path_cfg
         else:
-            renderer_path = "renderer_sparse/target/release/renderer.exe"
+            renderer_path = renderer_sparse_path_cfg
 
         if os.path.exists(f"{renderer_path}/cache/{z}/{x}_{y}.png"):
             if self.currentLayerType == "custom" and z > 13:

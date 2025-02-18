@@ -12,6 +12,7 @@
 
         <file>i18n/app.zh_CN.qm</file>
         <file>i18n/app.zh_HK.qm</file>
+        <file>images/logo.ico</file>
 
         <file>qss/light/setting_interface.qss</file>
         <file>qss/light/map_interface.qss</file>
