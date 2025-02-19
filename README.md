@@ -284,32 +284,17 @@ root
 
 ### 依赖与编译
 
-#### Python依赖安装
+1. 安装并确保PATH上有以下工具：
+    - Python3      (python, pip)
+    - Rust         (cargo, rustc)
+    - C/C++编译器  (g++, mingw32-make)
+    - CMake        (cmake)   
 
-在根目录下输入 `pip3 install -r requirements.txt`。
-
-#### 渲染器编译——Rust
-
-根目录下输入：
-
-```bash
-cd renderer
-cargo build --release
-
-cd renderer_sparse
-cargo build --release
-```
-
-#### 后端编译——C/C++
-
-根目录下输入：
-
-```bash
-cd backend
-mkdir build && cd build
-cmake ..
-make -j$(nproc)
-```
+2. windows: 运行`build.ps1`，linux: 运行`build.sh`，即可:
+    - 安装python依赖
+    - 编译C/C++后端, rust渲染器
+    - 自动下载上海地图（下载容易出错，出错时尝试用浏览器下载）
+    - 基于此地图生成数据库，供渲染器使用
 
 ### 运行
 
