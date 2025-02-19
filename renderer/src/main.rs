@@ -340,7 +340,7 @@ fn render_map(zoom: i32, xtile: i32, ytile: i32) {
     let scene_width = 800;
     let scene_height = 600;
 
-    let db_path = "../map_data/map.db";
+    let db_path = "map_data/map.db";
     let ways = query_ways_from_db(db_path, zoom, (xtile, ytile));
 
     let start2 = std::time::Instant::now();

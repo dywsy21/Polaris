@@ -52,6 +52,10 @@ def preprocess_osm_data(osm_file_path, db_path):
                         k TEXT, 
                         v TEXT,
                         FOREIGN KEY(way_id) REFERENCES ways(id))''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS way_id (
+                        id INTEGER PRIMARY KEY,
+                        ref_id INTEGER,
+                        FOREIGN KEY(ref_id) REFERENCES ways(id))''')
     
     context = ET.iterparse(osm_file_path, events=("start", "end"))
     context = iter(context)

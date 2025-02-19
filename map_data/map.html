@@ -85,7 +85,7 @@
             ).addTo(window.baseLayerGroup);
 
             var custom_tile_layer = L.tileLayer(
-                "../bin/cache_renderer/{z}/{x}_{y}.png", // Updated path to the correct cache folder
+                "../cache_renderer/{z}/{x}_{y}.png", // Updated path to the correct cache folder
                 {
                     "detectRetina": false,
                     "maxNativeZoom": 19,
@@ -100,7 +100,7 @@
             window.customLayerGroup.addLayer(custom_tile_layer);
 
             var custom_tile_layer2 = L.tileLayer(
-                "../bin/cache_renderer_sparse/{z}/{x}_{y}.png", // Updated path to the correct cache folder
+                "../cache_renderer_sparse/{z}/{x}_{y}.png", // Updated path to the correct cache folder
                 {
                     "detectRetina": false,
                     "maxNativeZoom": 19,

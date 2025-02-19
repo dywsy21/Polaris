@@ -1,5 +1,9 @@
+$ErrorActionPreference = "Stop"
 $root_dir = Get-Location
 New-Item -ItemType Directory -Path "$root_dir/bin" -Force
+
+# Install python dependencies
+pip install -r requirements.txt
 
 # Build backend C++ project
 Set-Location "$root_dir/backend"
@@ -8,9 +12,9 @@ if (Test-Path "build") {
 }
 New-Item -ItemType Directory -Path "build" | Out-Null
 Set-Location "build"
-cmake ..
-cmake --build . --config Release
-Copy-Item -Path ".\Release\backend.exe" -Destination "$root_dir/bin" -Force
+cmake -G "MinGW Makefiles" ..
+mingw32-make -j 16 
+Copy-Item -Path ".\backend.exe" -Destination "$root_dir/bin" -Force
 
 # Build rust project: renderer
 Set-Location $root_dir

@@ -1157,7 +1157,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "renderer"
+name = "renderer_sparse"
 version = "0.1.0"
 dependencies = [
  "plotters",

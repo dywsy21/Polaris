@@ -16,3 +16,8 @@ cmake.md
 CMakeCache.txt
 new_funcs.md
 **/CMakeFiles
+**/*.osm
+**/*.db
+**/*.exe
+**/cache_renderer
+**/cache_renderer_sparse

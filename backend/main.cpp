@@ -49,7 +49,9 @@ int main(int argc, char* argv[]) {
     std::unordered_map<uint64_t, std::pair<double, double>> node_id_to_coords;
 
     // std::string filepath = "../backend/data/map.osm";
-    std::string filepath = "E:\\BaiduSyncdisk\\Code Projects\\PyQt Projects\\Data Structure Project\\backend\\data\\map.osm";
+    // std::string filepath = "E:\\BaiduSyncdisk\\Code Projects\\PyQt Projects\\Data Structure Project\\backend\\data\\map.osm";
+    // std::string filepath = "../map_data/map.osm";
+    std::string filepath = "map_data/map.osm";
     
     KdTree kd_tree(2); // Initialize KdTree with 2 dimensions (latitude and longitude)
     std::unordered_map<uint64_t, uint32_t> node_id_to_index;
@@ -68,7 +70,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Graph loaded in " << (double)load_duration / (double)1000 << "s" << std::endl;
     std::cout.flush(); // Ensure the output is flushed immediately
 
-    std::string output_file = "E:\\BaiduSyncdisk\\Code Projects\\PyQt Projects\\Data Structure Project\\backend\\data\\place_names.txt";
+    std::string output_file = "map_data/place_name.txt";
 
     // Check if the output file exists
     std::ifstream infile(output_file);

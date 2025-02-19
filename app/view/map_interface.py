@@ -695,11 +695,11 @@ class MapInterface(QWidget):
         if os.path.exists(f"{renderer_path}/cache/{z}/{x}_{y}.png"):
             if self.currentLayerType == "custom" and z > 13:
                 # copy the tile to the custom layer
-                os.makedirs(f"renderer/cache/{z}", exist_ok=True)
-                shutil.copyfile(f"renderer_sparse/cache/{z}/{x}_{y}.png", f"renderer/cache/{z}/{x}_{y}.png")
+                os.makedirs(f"cache_renderer/{z}", exist_ok=True)
+                shutil.copyfile(f"cache_renderer_sparse/{z}/{x}_{y}.png", f"cache_renderer/{z}/{x}_{y}.png")
             return
 
-        if os.path.exists(f"renderer/cache/{z}/{x}_{y}.png") and os.path.exists(f"renderer_sparse/cache/{z}/{x}_{y}.png"):
+        if os.path.exists(f"cache_renderer/{z}/{x}_{y}.png") and os.path.exists(f"cache_renderer_sparse/{z}/{x}_{y}.png"):
             return
 
         # Render the tile using the appropriate renderer executable asynchronously
@@ -725,8 +725,8 @@ class MapInterface(QWidget):
                     signalBus.sendRendererInfo.emit(f"[INFO] Successfully rendered sparse tile {z}/{x}/{y}")
                 if self.currentLayerType == "custom" and z > 13:
                     # copy the tile to the custom layer
-                    os.makedirs(f"renderer/cache/{z}", exist_ok=True)
-                    shutil.copyfile(f"renderer_sparse/cache/{z}/{x}_{y}.png", f"renderer/cache/{z}/{x}_{y}.png")
+                    os.makedirs(f"cache_renderer_sparse/{z}", exist_ok=True)
+                    shutil.copyfile(f"cache_renderer/{z}/{x}_{y}.png", f"cache_renderer_sparse/{z}/{x}_{y}.png")
             signalBus.finishRenderingTile.emit(z, x, y)
 
         # Submit the rendering task to the executor
