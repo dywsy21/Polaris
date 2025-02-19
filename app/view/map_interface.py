@@ -358,7 +358,7 @@ class MapInterface(QWidget):
 
             // Define custom icons
             var yellowIcon = L.icon({
-                iconUrl: './assets/yellow_icon.svg',
+                iconUrl: '../asset/yellow_icon.svg',
                 iconSize: [25, 41],
                 iconAnchor: [12, 41],
                 popupAnchor: [1, -34],
@@ -567,7 +567,7 @@ class MapInterface(QWidget):
 
             // Define custom icons
             var yellowIcon = L.icon({{
-                iconUrl: './assets/yellow_icon.svg',
+                iconUrl: '../asset/yellow_icon.svg',
                 iconSize: [25, 41],
                 iconAnchor: [12, 41],
                 popupAnchor: [1, -34],
@@ -1119,7 +1119,7 @@ class MapInterface(QWidget):
         self.enable_time_first_mode = self.switchModeCheckBox.isChecked()
 
     def loadNamesDic(self):
-        with open("E:\\BaiduSyncdisk\\Code Projects\\PyQt Projects\\Data Structure Project\\backend\\data\\place_names.txt", 'r', encoding='utf-8') as f:
+        with open("map_data\\place_name.txt", 'r', encoding='utf-8') as f:
             for line in f:
                 if line:
                     parts = line.strip().rsplit(' ', 2)
