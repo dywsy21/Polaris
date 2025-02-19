@@ -2,7 +2,6 @@ import xml.etree.ElementTree as ET
 import math
 import sqlite3
 from app.common.config import *
-from renderer import preprocess_osm
 
 # Function to calculate tile coordinates from latitude and longitude
 def lat_lon_to_tile(lat, lon, zoom):
